@@ -30,7 +30,10 @@ class IGEGEdge:
 
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-    id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    id: str = field(
+        default_factory=lambda: str(uuid.uuid4())
+    )
+
 
     def to_dict(self):
 
