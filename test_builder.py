@@ -1,57 +1,65 @@
 from igeg.builder import IGEGBuilder
-from igeg.node import IGEGNode, NodeType
 from igeg.edge import EdgeType
+
 
 
 builder = IGEGBuilder()
 
 
-intent = IGEGNode(
-    NodeType.INTENT,
-    "Predict Customer Churn"
+
+intent = builder.add_intent(
+    {
+        "name":"Predict Customer Churn",
+        "task":"classification",
+        "target":"churn",
+        "entity":"customer"
+    }
 )
 
 
-concept = IGEGNode(
-    NodeType.CONCEPT,
+
+customer = builder.add_concept(
     "Customer"
 )
 
 
-table = IGEGNode(
-    NodeType.TABLE,
+
+customers_table = builder.add_table(
     "Customers"
 )
 
 
-builder.add_node(intent)
-builder.add_node(concept)
-builder.add_node(table)
-
 
 builder.connect(
     intent,
-    concept,
+    customer,
     EdgeType.SEMANTIC,
     weight=0.9,
     metadata={
-        "reason": "intent understanding"
+        "reason":"intent understanding"
     }
 )
+
 
 
 builder.connect(
-    concept,
-    table,
+    customer,
+    customers_table,
     EdgeType.MAPPING,
     weight=0.95,
     metadata={
-        "reason": "schema grounding"
+        "reason":"schema grounding"
     }
 )
 
 
-igeg = builder.build()
+
+graph = builder.build()
 
 
-print(igeg.to_dict())
+
+graph.print_graph()
+
+
+
+print(graph.to_dict())

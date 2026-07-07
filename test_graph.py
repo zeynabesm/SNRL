@@ -6,13 +6,22 @@ from igeg.edge import IGEGEdge, EdgeType
 
 
 
+# Create graph
+
 graph = IGEGGraph()
 
 
 
+# Create nodes
+
 intent = IGEGNode(
     NodeType.INTENT,
-    "Predict Customer Churn"
+    "Predict Customer Churn",
+    metadata={
+        "task": "classification",
+        "target": "churn",
+        "entity": "customer"
+    }
 )
 
 
@@ -29,6 +38,8 @@ table = IGEGNode(
 
 
 
+# Add nodes
+
 graph.add_node(intent)
 
 graph.add_node(concept)
@@ -37,27 +48,50 @@ graph.add_node(table)
 
 
 
-edge1 = IGEGEdge(
+# Create edges
+
+semantic_edge = IGEGEdge(
     source=intent.id,
     target=concept.id,
     edge_type=EdgeType.SEMANTIC,
-    weight=0.9
+    weight=0.9,
+    metadata={
+        "reason": "intent concept relation"
+    }
 )
 
 
-edge2 = IGEGEdge(
+
+mapping_edge = IGEGEdge(
     source=concept.id,
     target=table.id,
     edge_type=EdgeType.MAPPING,
-    weight=0.95
+    weight=0.95,
+    metadata={
+        "reason": "schema grounding"
+    }
 )
 
 
 
-graph.add_edge(edge1)
+# Add edges
 
-graph.add_edge(edge2)
+graph.add_edge(semantic_edge)
+
+graph.add_edge(mapping_edge)
 
 
+
+# Print graph path
+
+print("\n=== IGEG Reasoning Path ===")
+
+graph.print_graph()
+
+
+
+# Print JSON structure
+
+print("\n=== IGEG JSON ===")
 
 print(graph.to_dict())

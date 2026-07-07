@@ -25,12 +25,12 @@ class IGEGGraph:
         self.edges.append(edge)
 
 
-    def get_node(self, node_id):
+    def get_node(self, node_id: str):
 
         return self.nodes.get(node_id)
 
 
-    def get_neighbors(self, node_id):
+    def get_neighbors(self, node_id: str):
 
         neighbors = []
 
@@ -38,9 +38,10 @@ class IGEGGraph:
 
             if edge.source == node_id:
 
-                neighbors.append(
-                    self.nodes[edge.target]
-                )
+                target_node = self.nodes.get(edge.target)
+
+                if target_node:
+                    neighbors.append(target_node)
 
         return neighbors
 
@@ -66,3 +67,21 @@ class IGEGGraph:
             ]
 
         }
+
+
+    def print_graph(self):
+
+        for edge in self.edges:
+
+            source = self.nodes.get(edge.source)
+
+            target = self.nodes.get(edge.target)
+
+
+            if source and target:
+
+                print(
+                    f"{source.name} "
+                    f"--[{edge.edge_type.value}]--> "
+                    f"{target.name}"
+                )
